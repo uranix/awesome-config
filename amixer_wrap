@@ -1,0 +1,2 @@
+#!/bin/bash
+amixer -D hw:$1 sget $2 | tail -n 1

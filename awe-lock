@@ -1,0 +1,5 @@
+#!/bin/bash
+
+# This requres modified version of i3lock
+
+i3lock -c 000000 -i /home/uranix/.awesome/lock4.png

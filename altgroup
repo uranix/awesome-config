@@ -1,0 +1,3 @@
+#!/bin/sh
+
+xset q | grep 'Group 2' | awk '{print $4}'
