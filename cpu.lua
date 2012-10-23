@@ -51,7 +51,7 @@ function new()
 			prev_idle = curr_idle
 			prev_total = curr_total
 			usage = (1000 * (diff_total - diff_idle)/diff_total + 5) / 10
-			local ishot = (usage > 10 or loada > 1.5)
+			local ishot = (usage > 12 or loada > 1.5)
 			local isveryhot =  (usage > 50 or loada > 2.5)
 			if isveryhot then
 				ib.image = veryhot
