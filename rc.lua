@@ -7,6 +7,7 @@ require("beautiful")
 -- Notification library
 require("naughty")
 naughty.config.default_preset.icon_size = 32
+naughty.config.default_preset.icon = "/usr/share/icons/Amaranth/64x64/status/dialog-info.png"
 
 require("battery")
 require("mail")
@@ -328,7 +329,8 @@ globalkeys = awful.util.table.join(
 				"echo " .. status .. " > /proc/easy_backlight")
 			naughty.notify({
 				text = "Backlight status: " .. message[status+1], 
-				title = "Backlight"
+				title = "Backlight",
+				icon = "/usr/share/icons/gnome/32x32/status/messagebox_info.png"
 				})
 			-- Toggle backlight
 		end),
@@ -343,7 +345,8 @@ globalkeys = awful.util.table.join(
 			awful.util.spawn("/usr/sbin/rfkill " .. command[yeno] .. " bluetooth")
 			naughty.notify({
 				text = "Bluetooth status: " .. message[yeno],
-				title = "Bluetooth"
+				title = "Bluetooth",
+				icon = "/usr/share/icons/oxygen/32x32/apps/preferences-system-bluetooth.png"
 				})
 			-- Toggle bluetooth
 		end),
@@ -357,12 +360,13 @@ globalkeys = awful.util.table.join(
 				"echo " .. status .. " > /proc/easy_slow_down_manager")
 			naughty.notify({
 				text = "Cpu cooling status: " .. message[status+1], 
-				title = "Cpu"
+				title = "Cpu",
+				icon = "/usr/share/icons/oxygen/32x32/devices/cpu.png"
 				})
 			-- Toggle cpu
 		end),
 	awful.key({}, "XF86Display", function()
-			-- TODO
+			awful.util.spawn("disper --cycle-stages=' -s : -e ' -C");
 		end),
 	awful.key({}, "XF86WLAN", function()
 			local status = 1 - awful.util.pread("cat /proc/easy_wifi_kill");
@@ -371,7 +375,8 @@ globalkeys = awful.util.table.join(
 				"echo " .. status .. " > /proc/easy_wifi_kill")
 			naughty.notify({
 				text = "WiFi status: " .. message[status+1], 
-				title = "WiFi"
+				title = "WiFi",
+				icon = "/usr/share/icons/oxygen/32x32/devices/network-wireless.png"
 				})
 			-- Toggle wireless
 		end)
