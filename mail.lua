@@ -19,7 +19,7 @@ offline = image("/usr/share/icons/gnome/24x24/status/stock_dialog-error.png")
 function new(filter)
 	local ib = widget({type = "imagebox"})
 	local text = widget({type = "textbox"})
-	local timer = timer {timeout = 2}
+	local timer = timer {timeout = 5}
 	local total = 0;
 	ib.image = offline
 	text.text = " 0 "

@@ -15,10 +15,10 @@ if [ "$ICEDOVE" = "x" ]; then
 	icedove &
 fi
 
-ICEWEASEL="x"$(pidof firefox-bin)
-if [ "$ICEWEASEL" = "x" ]; then
-	iceweasel &
-fi
+#ICEWEASEL="x"$(pidof firefox-bin)
+#if [ "$ICEWEASEL" = "x" ]; then
+#	iceweasel &
+#fi
 
 QUTIM="x"$(pidof qutim)
 if [ "$QUTIM" = "x" ]; then
@@ -27,7 +27,7 @@ fi
 
 CMUS="x"$(pidof cmus)
 if [ "$CMUS" = "x" ]; then
-	urxvt -e cmus &
+	screen -d -m cmus
 fi
 
 POLKIT="x"$(pidof polkit-gnome-authentication-agent-1)
