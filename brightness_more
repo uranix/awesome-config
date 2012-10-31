@@ -1,6 +1,6 @@
 #!/bin/bash
 
-LEVEL=$(cat /sys/class/backlight/samsung/actual_brightness)
+LEVEL=$(cat /sys/class/backlight/samsung/brightness)
 LEVEL_MAX=$(cat /sys/class/backlight/samsung/max_brightness)
 
 if [ $LEVEL -lt $LEVEL_MAX ]; then
