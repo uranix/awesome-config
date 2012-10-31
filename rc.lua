@@ -19,6 +19,10 @@ require("kbdlayout")
 -- Calendar
 require("cal")
 
+function debug(message)
+	naughty.notify({text = message})
+end
+
 -- {{{ Error handling
 -- Check if awesome encountered an error during startup and fell back to
 -- another config (This code will only ever execute for the fallback config)
@@ -82,16 +86,19 @@ layouts =
 --    awful.layout.suit.max.fullscreen --,
 --    awful.layout.suit.magnifier
 }
+
+activescreen = 1;
+
 -- }}}
 
 -- {{{ Tags
 -- Define a tag table which hold all screen tags.
 -- Rename to break old depending code
 mytags = {}
-activescreen = 1;
 
 function set_active_screen(i) 
 	activescreen = i;
+
 	-- make naughty notifications follow active screen
 	naughty.config.default_preset.screen = activescreen;
 end
@@ -142,8 +149,8 @@ mylayoutbox = {}
 mytaglist = {}
 mytaglist.buttons = awful.util.table.join(
                     awful.button({ }, 1, 
-	function(c)
-		activescreen = c.screen
+	function (c)
+		set_active_screen(c.screen)
 		awful.tag.viewonly(c);
 	end),
                     awful.button({ modkey }, 1, awful.client.movetotag),
@@ -514,8 +521,31 @@ awful.rules.rules = {
 -- }}}
 
 -- {{{ Signals
+client.remove_signal("manage", awful.tag.standart_manage_handler)
+-- rules should be applied AFTER standart_manage_handler which i'm about
+-- to hook
+client.remove_signal("manage", awful.rules.apply)
 
-
+client.add_signal("manage", function (c, startup)
+    -- If we are not managing this application at startup,
+    -- move it to the screen where the mouse is.
+    -- We only do it for "normal" windows (i.e. no dock, etc).
+    if not startup
+        and c.type ~= "desktop"
+        and c.type ~= "dock"
+        and c.type ~= "splash" then
+        if c.transient_for then
+            c.screen = c.transient_for.screen
+            if not c.sticky then
+                c:tags(c.transient_for:tags())
+            end
+        else
+            c.screen = activescreen
+        end
+    end
+    c:add_signal("property::screen", awful.tag.withcurrent)
+end)
+client.add_signal("manage", awful.rules.apply)
 
 -- Signal function to execute when a new client appears.
 client.add_signal("manage", function (c, startup)
