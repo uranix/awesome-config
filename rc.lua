@@ -2,6 +2,7 @@
 require("awful")
 require("awful.autofocus")
 require("awful.rules")
+require("awful.tag")
 -- Theme handling library
 require("beautiful")
 -- Notification library
@@ -87,6 +88,20 @@ layouts =
 -- Define a tag table which hold all screen tags.
 -- Rename to break old depending code
 mytags = {}
+activescreen = nil;
+
+function set_active_screen(i) 
+	activescreen = i;
+	-- make naughty notifications follow active screen
+	naughty.config.default_preset.screen = activescreen;
+	naughty.notify({text = "This is active screen now " .. activescreen});
+end
+
+function spawn_on_active_screen(cmd)
+	naughty.notify({text = "Spawning " .. cmd .. " on " .. activescreen});
+	awful.util.spawn(cmd, nil, activescreen);
+end
+
 tagall = {
 	{name = "1",        layout = awful.layout.suit.tile, screen = 1 },
 	{name = "2",        layout = awful.layout.suit.tile, screen = 2 },
@@ -273,12 +288,13 @@ globalkeys = awful.util.table.join(
         end),
 
     -- Standard program
-    awful.key({ modkey,           }, "space", function () awful.util.spawn(terminal) end),
+    awful.key({ modkey,           }, "space", function () spawn_on_active_screen(terminal) end),
     awful.key({ modkey, "Shift"   }, "r", awesome.restart),
     awful.key({ modkey,           }, "q", function () awful.util.spawn(awe_lock) end),
-    awful.key({ modkey, "Shift"   }, "e", function () awful.util.spawn(awe_exit) end),
+    awful.key({ modkey, "Shift"   }, "e", 
+		function () spawn_on_active_screen(awe_exit) end),
     awful.key({					  }, "XF86PowerOff", 
-		function () awful.util.spawn(awe_exit) end),
+		function () spawn_on_active_screen(awe_exit) end),
 
     awful.key({ modkey,           }, "l",     function () awful.tag.incmwfact( 0.05)    end),
     awful.key({ modkey,           }, "h",     function () awful.tag.incmwfact(-0.05)    end),
@@ -294,13 +310,13 @@ globalkeys = awful.util.table.join(
     -- Prompt
 	awful.key({ modkey },            "Return", 
 			function () 
-				mypromptbox[mouse.screen]:run() 
+				mypromptbox[activescreen]:run() 
 			end),
 
 	awful.key({ modkey }, "x",
 			function ()
 				awful.prompt.run({ prompt = "Run Lua code: " },
-					mypromptbox[mouse.screen].widget,
+					mypromptbox[activescreen].widget,
 					awful.util.eval, nil,
 					awful.util.getdir("cache") .. "/history_eval")
 			end),
@@ -430,6 +446,7 @@ for i = 1, keynumber do
 				function ()
 					if mytags[i] then
 						awful.tag.viewonly(mytags[i])
+						set_active_screen(mytags[i].screen);
 						-- XXX: this is only to focus active window on tag i
 						awful.tag.viewtoggle(mytags[i])
 						awful.tag.viewtoggle(mytags[i])
@@ -481,28 +498,30 @@ awful.rules.rules = {
     { rule = { class = "gimp" },
       properties = { floating = true } },
     -- Window to tag mapping
-    { rule = { class = "Firefox" },
-      properties = { tag = mytags[5] } },
-    { rule = { class = "Iceweasel" },
+    { rule_any = { class = {"Firefox", "Iceweasel" } },
       properties = { tag = mytags[5] } },
     { rule = { class = "Icedove" },
       properties = { tag = mytags[6] } },
-    { rule = { class = "Qutim" },
-      properties = { tag = mytags[7] } },
-    { rule = { class = "Xchat" },
-      properties = { tag = mytags[7] } },
-    { rule = { class = "Skype" },
+    { rule_any = { class = {"Qutim", "Xchat", "Skype"} },
       properties = { tag = mytags[7] } },
     { rule = { icon_name = "cmus" },
       properties = { tag = mytags[8] } },
-    { rule = { class = "Vlc" },
-      properties = { tag = mytags[9] } },
-    { rule = { class = "MPlayer" },
+    { rule_any = { class = { "Vlc", "MPlayer"} },
       properties = { tag = mytags[9] } },
 }
 -- }}}
 
 -- {{{ Signals
+
+awful.tag.withcurrent = function(c, startup)
+	if startup ~= true and c.sticky == false then
+		if #c:tags() == 0 then
+			c.screen = activescreen
+			c:tags(awful.tag.selectedlist(activescreen))
+		end
+	end
+end
+
 -- Signal function to execute when a new client appears.
 client.add_signal("manage", function (c, startup)
     -- Add a titlebar
@@ -515,12 +534,6 @@ client.add_signal("manage", function (c, startup)
 			client.focus = c
 		end
 	end)
-	--]]
-
-	-- make naughty notifications follow active screen
-	c:add_signal("mouse::enter", function(c)
-		naughty.config.default_preset.screen = c.screen
-	end)
 
     if not startup then
         -- Set the windows at the slave,
@@ -529,12 +542,16 @@ client.add_signal("manage", function (c, startup)
 
         -- Put windows in a smart way, only if they does not set an initial position.
         if not c.size_hints.user_position and not c.size_hints.program_position then
-            awful.placement.no_overlap(c)
-            awful.placement.no_offscreen(c)
         end
     end
+	--]]
 end)
 
-client.add_signal("focus", function(c) c.border_color = beautiful.border_focus end)
+client.add_signal("focus", function(c) 
+	if activescreen ~= c.screen then
+		set_active_screen(c.screen);
+	end
+	c.border_color = beautiful.border_focus 
+end)
 client.add_signal("unfocus", function(c) c.border_color = beautiful.border_normal end)
 -- }}}
