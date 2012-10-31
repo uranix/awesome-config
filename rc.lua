@@ -94,11 +94,9 @@ function set_active_screen(i)
 	activescreen = i;
 	-- make naughty notifications follow active screen
 	naughty.config.default_preset.screen = activescreen;
-	naughty.notify({text = "This is active screen now " .. activescreen});
 end
 
 function spawn_on_active_screen(cmd)
-	naughty.notify({text = "Spawning " .. cmd .. " on " .. activescreen});
 	awful.util.spawn(cmd, nil, activescreen);
 end
 
