@@ -88,7 +88,7 @@ layouts =
 -- Define a tag table which hold all screen tags.
 -- Rename to break old depending code
 mytags = {}
-activescreen = nil;
+activescreen = 1;
 
 function set_active_screen(i) 
 	activescreen = i;
@@ -515,14 +515,7 @@ awful.rules.rules = {
 
 -- {{{ Signals
 
-awful.tag.withcurrent = function(c, startup)
-	if startup ~= true and c.sticky == false then
-		if #c:tags() == 0 then
-			c.screen = activescreen
-			c:tags(awful.tag.selectedlist(activescreen))
-		end
-	end
-end
+
 
 -- Signal function to execute when a new client appears.
 client.add_signal("manage", function (c, startup)
@@ -536,6 +529,7 @@ client.add_signal("manage", function (c, startup)
 			client.focus = c
 		end
 	end)
+	--]]
 
     if not startup then
         -- Set the windows at the slave,
@@ -543,10 +537,13 @@ client.add_signal("manage", function (c, startup)
         -- awful.client.setslave(c)
 
         -- Put windows in a smart way, only if they does not set an initial position.
-        if not c.size_hints.user_position and not c.size_hints.program_position then
+        if 	not c.size_hints.user_position and 
+			not c.size_hints.program_position then
+			awful.placement.no_overlap(c)
+			awful.placement.no_offscreen(c)
         end
     end
-	--]]
+
 end)
 
 client.add_signal("focus", function(c) 
@@ -555,5 +552,6 @@ client.add_signal("focus", function(c)
 	end
 	c.border_color = beautiful.border_focus 
 end)
+
 client.add_signal("unfocus", function(c) c.border_color = beautiful.border_normal end)
 -- }}}
