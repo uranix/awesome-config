@@ -20,7 +20,7 @@ require("kbdlayout")
 require("cal")
 
 function debug(message)
-	naughty.notify({text = message})
+	naughty.notify({text = "Debug: ".. message})
 end
 
 -- {{{ Error handling
@@ -128,8 +128,9 @@ for i, tset in ipairs(tagall) do
 	mytags[i].screen = math.min(screen.count(), tset.screen)
 	awful.tag.setproperty(mytags[i], "layout", tset.layout);
 end
-mytags[1].selected = true
-mytags[2].selected = true
+for i = 1, screen.count() do
+	mytags[i].selected = true
+end
 
 -- }}}
 
@@ -205,7 +206,7 @@ end)
 mycpuindicator = cpu()
 
 -- Mixer indicator
-activevolumecontrol = {device = 0, control = "Speaker"}
+activevolumecontrol = {device = 0, control = "Headphone"}
 
 myvolumeindicator = mixer({
 	{alias = "Intel", control = "Headphone", name = "Head"},
@@ -270,6 +271,18 @@ root.buttons(awful.util.table.join(
 -- }}}
 
 -- {{{ Global bindings
+awful.tag.selectedlist = function(s)
+    local s  = s or activescreen
+    local tags = screen[s]:tags()
+    local vtags = {}
+    for i, t in pairs(tags) do
+        if t.selected then
+            vtags[#vtags + 1] = t
+        end
+    end
+    return vtags
+end
+
 globalkeys = awful.util.table.join(
     awful.key({ modkey,           }, "Left",   awful.tag.viewprev       ),
     awful.key({ modkey,           }, "Right",  awful.tag.viewnext       ),
@@ -516,7 +529,7 @@ awful.rules.rules = {
       properties = { tag = mytags[6] } },
     { rule_any = { class = {"Qutim", "Xchat", "Skype"} },
       properties = { tag = mytags[7] } },
-    { rule = { icon_name = "cmus" },
+    { rule = { icon_name = ".* - CMus" },
       properties = { tag = mytags[8] } },
     { rule_any = { class = { "Vlc", "MPlayer"} },
       properties = { tag = mytags[9] } },
