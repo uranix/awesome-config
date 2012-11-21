@@ -284,20 +284,22 @@ awful.tag.selectedlist = function(s)
 end
 
 globalkeys = awful.util.table.join(
-    awful.key({ modkey,           }, "Left",   awful.tag.viewprev       ),
-    awful.key({ modkey,           }, "Right",  awful.tag.viewnext       ),
     awful.key({ modkey,           }, "Escape", awful.tag.history.restore),
 
-    awful.key({ modkey,           }, "j",
+    awful.key({ modkey,           }, "j",   awful.tag.viewprev       ),
+    awful.key({ modkey,           }, "k",  awful.tag.viewnext       ),
+
+    awful.key({ modkey,           }, "Left",
         function ()
             awful.client.focus.byidx( 1)
             if client.focus then client.focus:raise() end
         end),
-    awful.key({ modkey,           }, "k",
+    awful.key({ modkey,           }, "Right",
         function ()
             awful.client.focus.byidx(-1)
             if client.focus then client.focus:raise() end
         end),
+
     -- Layout manipulation
     awful.key({ modkey, "Shift"   }, "j", function () awful.client.swap.byidx(  1)    end),
     awful.key({ modkey, "Shift"   }, "k", function () awful.client.swap.byidx( -1)    end),
@@ -414,6 +416,10 @@ globalkeys = awful.util.table.join(
 			local message = {"Off", "On"}
 			awful.util.spawn_with_shell(
 				"echo " .. status .. " > /proc/easy_wifi_kill")
+			if status == 1 then
+				-- Sometimes WiFi gets soft-blocked. Unblock it here
+				awful.util.spawn("/usr/sbin/rfkill unblock wifi")
+			end
 			naughty.notify({
 				text = "WiFi status: " .. message[status+1], 
 				title = "WiFi",
@@ -567,15 +573,6 @@ client.add_signal("manage", awful.rules.apply)
 client.add_signal("manage", function (c, startup)
     -- Add a titlebar
     awful.titlebar.add(c, { modkey = modkey })
-
-    --[[ -- Enable sloppy focus
-	c:add_signal("mouse::enter", function(c)
-		if awful.layout.get(c.screen) ~= awful.layout.suit.magnifier
-			and awful.client.focus.filter(c) then
-			client.focus = c
-		end
-	end)
-	--]]
 
     if not startup then
         -- Set the windows at the slave,
