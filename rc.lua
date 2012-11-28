@@ -286,8 +286,8 @@ end
 globalkeys = awful.util.table.join(
     awful.key({ modkey,           }, "Escape", awful.tag.history.restore),
 
-    awful.key({ modkey,           }, "j",   awful.tag.viewprev       ),
-    awful.key({ modkey,           }, "k",  awful.tag.viewnext       ),
+    awful.key({ modkey,           }, "j",  awful.tag.viewprev),
+    awful.key({ modkey,           }, "k",  awful.tag.viewnext),
 
     awful.key({ modkey,           }, "Left",
         function ()
@@ -318,17 +318,14 @@ globalkeys = awful.util.table.join(
     awful.key({ modkey,           }, "space", function () spawn_on_active_screen(terminal) end),
     awful.key({ modkey, "Shift"   }, "r", awesome.restart),
     awful.key({ modkey,           }, "q", function () awful.util.spawn(awe_lock) end),
-    awful.key({ modkey, "Shift"   }, "e", 
-		function () spawn_on_active_screen(awe_exit) end),
-    awful.key({					  }, "XF86PowerOff", 
-		function () spawn_on_active_screen(awe_exit) end),
-
-    awful.key({ modkey,           }, "l",     function () awful.tag.incmwfact( 0.05)    end),
-    awful.key({ modkey,           }, "h",     function () awful.tag.incmwfact(-0.05)    end),
-    awful.key({ modkey, "Shift"   }, "h",     function () awful.tag.incnmaster( 1)      end),
-    awful.key({ modkey, "Shift"   }, "l",     function () awful.tag.incnmaster(-1)      end),
-    awful.key({ modkey, "Control" }, "h",     function () awful.tag.incncol( 1)         end),
-    awful.key({ modkey, "Control" }, "l",     function () awful.tag.incncol(-1)         end),
+    awful.key({ modkey, "Shift"   }, "e", function () spawn_on_active_screen(awe_exit) end),
+    awful.key({					  }, "XF86PowerOff", function () spawn_on_active_screen(awe_exit) end),
+    awful.key({ modkey,           }, "l", function () awful.tag.incmwfact( 0.05)    end),
+    awful.key({ modkey,           }, "h", function () awful.tag.incmwfact(-0.05)    end),
+    awful.key({ modkey, "Shift"   }, "l", function () awful.tag.incnmaster( 1)      end),
+    awful.key({ modkey, "Shift"   }, "h", function () awful.tag.incnmaster(-1)      end),
+    awful.key({ modkey, "Control" }, "l", function () awful.tag.incncol( 1)         end),
+    awful.key({ modkey, "Control" }, "h", function () awful.tag.incncol(-1)         end),
     awful.key({ modkey,           }, "w", function () awful.layout.inc(layouts,  1) end),
     awful.key({ modkey,           }, "r", function () awful.layout.inc(layouts, -1) end),
 
