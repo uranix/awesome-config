@@ -78,11 +78,11 @@ layouts =
     awful.layout.suit.tile.top,
     awful.layout.suit.tile.bottom,
     awful.layout.suit.tile,
---    awful.layout.suit.fair,
---    awful.layout.suit.fair.horizontal,
+    awful.layout.suit.max,
+    awful.layout.suit.fair,
+    awful.layout.suit.fair.horizontal,
 --    awful.layout.suit.spiral,
 --    awful.layout.suit.spiral.dwindle,
-    awful.layout.suit.max,
 --    awful.layout.suit.max.fullscreen --,
 --    awful.layout.suit.magnifier
 }
@@ -224,10 +224,10 @@ for s = 1, screen.count() do
     -- We need one layoutbox per screen.
     mylayoutbox[s] = awful.widget.layoutbox(s)
     mylayoutbox[s]:buttons(awful.util.table.join(
-                           awful.button({ }, 1, function () awful.layout.inc(layouts, 1) end),
-                           awful.button({ }, 3, function () awful.layout.inc(layouts, -1) end),
-                           awful.button({ }, 4, function () awful.layout.inc(layouts, 1) end),
-                           awful.button({ }, 5, function () awful.layout.inc(layouts, -1) end)))
+                           awful.button({ }, 1, function () set_active_screen(s); awful.layout.inc(layouts, 1);  end),
+                           awful.button({ }, 3, function () set_active_screen(s); awful.layout.inc(layouts, -1); end),
+                           awful.button({ }, 4, function () set_active_screen(s); awful.layout.inc(layouts, 1);  end),
+                           awful.button({ }, 5, function () set_active_screen(s); awful.layout.inc(layouts, -1); end)))
     -- Create a taglist widget
     mytaglist[s] = awful.widget.taglist(s, awful.widget.taglist.label.all, mytaglist.buttons)
 
