@@ -35,7 +35,7 @@ theme.border_marked = "#91231c"
 theme.taglist_squares_sel   = "/usr/share/awesome/themes/default/taglist/squarefw.png"
 theme.taglist_squares_unsel = "/usr/share/awesome/themes/default/taglist/squarew.png"
 
-theme.tasklist_floating_icon = "/usr/share/awesome/themes/default/tasklist/floatingw.png"
+theme.tasklist_floating_icon = os.getenv("HOME") .. "/.awesome/themes/default/cloud.png"
 
 -- Variables set for theming the menu:
 -- menu_[bg|fg]_[normal|focus]
@@ -74,7 +74,7 @@ theme.titlebar_maximized_button_normal_active = "/usr/share/awesome/themes/defau
 theme.titlebar_maximized_button_focus_active  = "/usr/share/awesome/themes/default/titlebar/maximized_focus_active.png"
 
 -- You can use your own command to set your wallpaper
-theme.wallpaper_cmd = { "awsetbg /usr/share/awesome/themes/default/background.png" }
+theme.wallpaper_cmd = { "awsetbg -a " .. os.getenv("HOME") .. "/.awesome/bg.png" }
 
 -- You can use your own layout icons like this:
 theme.layout_fairh = "/usr/share/awesome/themes/default/layouts/fairhw.png"

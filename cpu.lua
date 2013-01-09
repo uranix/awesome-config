@@ -13,7 +13,7 @@ module("cpu")
 
 veryhot = image("/usr/share/icons/gnome/24x24/status/software-update-urgent.png")
 hot = image("/usr/share/icons/gnome/24x24/status/software-update-available.png")
-norm = image("/home/uranix/.awesome/cpu-norm.png")
+norm = image(os.getenv("HOME") .. "/.awesome/cpu-norm.png")
 offline = image("/usr/share/icons/gnome/24x24/status/stock_dialog-error.png")
 
 function new()

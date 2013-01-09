@@ -127,6 +127,7 @@ for i, tset in ipairs(tagall) do
 	mytags[i] = tag({name = tset.name})
 	mytags[i].screen = math.min(screen.count(), tset.screen)
 	awful.tag.setproperty(mytags[i], "layout", tset.layout);
+	awful.tag.setproperty(mytags[i], "mwfact", 0.65);
 end
 for i = 1, screen.count() do
 	mytags[i].selected = true
@@ -199,6 +200,7 @@ mychargeindicator = battery("BAT1")
 mymailindicator = mail(function (x) 
 	return 
 		x == "tsybulinhome@gmail.com" or
+		x == "tsybulin@crec.mipt.com" or
 		x == "uranix@parallels.mipt.ru"
 end)
 
@@ -291,12 +293,12 @@ globalkeys = awful.util.table.join(
 
     awful.key({ modkey,           }, "Left",
         function ()
-            awful.client.focus.byidx( 1)
+            awful.client.focus.byidx(-1)
             if client.focus then client.focus:raise() end
         end),
     awful.key({ modkey,           }, "Right",
         function ()
-            awful.client.focus.byidx(-1)
+            awful.client.focus.byidx( 1)
             if client.focus then client.focus:raise() end
         end),
 

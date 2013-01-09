@@ -66,7 +66,7 @@ function new(bat)
 		local mins = math.floor((charge/current) * 60 + 0.5);
 		local hours = math.floor(mins / 60);
 		mins = mins - 60 * hours;
-		if current < 1000000 then
+		if current < 200000 then
 			text.text = " -:-- "
 		else
 			text.text = string.format(" %d:%02d ", hours, mins)

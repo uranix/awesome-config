@@ -12,7 +12,7 @@ fi
 
 ICEDOVE="x"$(pidof icedove-bin)
 if [ "$ICEDOVE" = "x" ]; then
-	icedove &
+	ionice -c 2 icedove &
 fi
 
 #ICEWEASEL="x"$(pidof firefox-bin)
