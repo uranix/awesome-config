@@ -6,6 +6,7 @@ local string = {format = string.format}
 local naughty = require("naughty")
 local math = {floor = math.floor}
 local type = type
+local os = {getenv = os.getenv}
 
 local setmetatable = setmetatable
 

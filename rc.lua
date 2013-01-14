@@ -536,8 +536,6 @@ awful.rules.rules = {
       properties = { tag = mytags[7] } },
     { rule = { icon_name = ".* - CMus" },
       properties = { tag = mytags[8] } },
-    { rule_any = { class = { "Vlc", "MPlayer"} },
-      properties = { tag = mytags[9] } },
 }
 -- }}}
 
