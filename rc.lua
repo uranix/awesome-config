@@ -163,9 +163,9 @@ mytaglist.buttons = awful.util.table.join(
 	end),
                     awful.button({ modkey }, 1, awful.client.movetotag),
                     awful.button({ }, 3, awful.tag.viewtoggle),
-                    awful.button({ modkey }, 3, awful.client.toggletag),
-                    awful.button({ }, 4, awful.tag.viewnext),
-                    awful.button({ }, 5, awful.tag.viewprev)
+                    awful.button({ modkey }, 3, awful.client.toggletag)--,
+--                    awful.button({ }, 4, awful.tag.viewnext),
+--                    awful.button({ }, 5, awful.tag.viewprev)
                     )
 mytasklist = {}
 mytasklist.buttons = awful.util.table.join(
@@ -190,14 +190,15 @@ mytasklist.buttons = awful.util.table.join(
                                                   instance = awful.menu.clients({ width=250 })
                                               end
                                           end),
-                     awful.button({ }, 4, function ()
+					 awful.button({ }, 4, function ()
                                               awful.client.focus.byidx(1)
                                               if client.focus then client.focus:raise() end
                                           end),
                      awful.button({ }, 5, function ()
                                               awful.client.focus.byidx(-1)
                                               if client.focus then client.focus:raise() end
-                                          end))
+                                          end)
+					)
 
 -- Simple charge indicator
 mychargeindicator = battery("BAT1")
@@ -508,8 +509,10 @@ awful.rules.rules = {
                      focus = true,
                      keys = clientkeys,
                      buttons = clientbuttons } },
+    { rule = { class = "Vlc" },
+      properties = { floating = true, ontop = true, sticky = true } },
     { rule = { class = "MPlayer" },
-      properties = { floating = true } },
+      properties = { floating = true, ontop = true, sticky = true } },
     { rule = { class = "pinentry" },
       properties = { floating = true } },
     { rule = { class = "gimp" },
