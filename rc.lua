@@ -19,7 +19,7 @@ require("kbdlayout")
 -- Calendar
 require("cal")
 
-function debug(message)
+function debug_notification(message)
 	naughty.notify({text = "Debug: ".. message})
 end
 
@@ -56,12 +56,18 @@ beautiful.init(os.getenv("HOME") .. "/.awesome/themes/default/theme.lua")
 terminal = "x-terminal-emulator"
 editor = os.getenv("EDITOR") or "editor"
 editor_cmd = terminal .. " -e " .. editor
-awe_exit = os.getenv("HOME") .. "/.awesome/awe-exit"
-awe_lock = os.getenv("HOME") .. "/.awesome/awe-lock"
-brightness_less = os.getenv("HOME") .. "/.awesome/brightness_less"
-brightness_more = os.getenv("HOME") .. "/.awesome/brightness_more"
+script_pwd = os.getenv("HOME") .. "/.awesome/scripts/"
 
-awful.util.spawn(os.getenv("HOME") .. "/.awesome/startup")
+awe_exit = script_pwd .. "awe-exit"
+awe_lock = script_pwd .. "awe-lock"
+brightness_less = script_pwd .. "brightness_less"
+brightness_more = script_pwd .. "brightness_more"
+backlight_toggle = script_pwd .. "backlight_toggle"
+wifi_toggle = script_pwd .. "wifi_toggle"
+bt_toggle = script_pwd .. "bt_toggle"
+fan_cycle = script_pwd .. "fan_cycle"
+
+awful.util.spawn(script_pwd .. "startup")
 
 -- Default modkey.
 -- Usually, Mod4 is the key with a logo between Control and Alt.
@@ -349,14 +355,21 @@ globalkeys = awful.util.table.join(
 -- }}}
 
 -- {{{ Misc bindings
+	awful.key({}, "XF86Display", function()
+			set_active_screen(1);
+			awful.util.spawn("disper --cycle-stages=' -s : -e ' -C");
+		end),
 	awful.key({}, "XF86AudioRaiseVolume", function()
-			awful.util.spawn(string.format('amixer -D hw:%d -q set %s 5%%+', activevolumecontrol.device, activevolumecontrol.control))
+			awful.util.spawn(string.format('amixer -D hw:%d -q set %s 5%%+', 
+				activevolumecontrol.device, activevolumecontrol.control))
 		end),
 	awful.key({}, "XF86AudioLowerVolume", function()
-			awful.util.spawn(string.format('amixer -D hw:%d -q set %s 5%%-', activevolumecontrol.device, activevolumecontrol.control))
+			awful.util.spawn(string.format('amixer -D hw:%d -q set %s 5%%-', 
+				activevolumecontrol.device, activevolumecontrol.control))
 		end),
 	awful.key({}, "XF86AudioMute", function()
-			awful.util.spawn(string.format('amixer -D hw:%d -q sset %s toggle', activevolumecontrol.device, activevolumecontrol.control))
+			awful.util.spawn(string.format('amixer -D hw:%d -q sset %s toggle', 
+			activevolumecontrol.device, activevolumecontrol.control))
 		end),
 	awful.key({}, "XF86MonBrightnessDown", function()
 			awful.util.spawn(brightness_less)
@@ -365,62 +378,36 @@ globalkeys = awful.util.table.join(
 			awful.util.spawn(brightness_more)
 		end),
 	awful.key({}, "XF86Launch1", function()
-			local status = 1 - awful.util.pread("cat /proc/easy_backlight");
-			local message = {"Off", "On"}
-			awful.util.spawn_with_shell(
-				"echo " .. status .. " > /proc/easy_backlight")
+			local status = awful.util.pread(backlight_toggle);
 			naughty.notify({
-				text = "Backlight status: " .. message[status+1], 
+				text = "Backlight status: " .. status, 
 				title = "Backlight",
 				icon = "/usr/share/icons/gnome/32x32/status/messagebox_info.png"
 				})
 			-- Toggle backlight
 		end),
 	awful.key({}, "XF86Launch2", function()
-			local output = awful.util.pread("/usr/sbin/rfkill list bluetooth")
-			local start = 0
-			local status = 0
-			start, status = output:find("Soft blocked: ")
-			local yeno = output:sub(status + 1, status + 2) 
-			local message = {["ye"] = "On", ["no"] = "Off"}
-			local command = {["ye"] = "unblock", ["no"] = "block"}
-			awful.util.spawn("/usr/sbin/rfkill " .. command[yeno] .. " bluetooth")
+			local status = awful.util.pread(bt_toggle)
 			naughty.notify({
-				text = "Bluetooth status: " .. message[yeno],
+				text = "Bluetooth status: " .. status,
 				title = "Bluetooth",
 				icon = "/usr/share/icons/oxygen/32x32/apps/preferences-system-bluetooth.png"
 				})
 			-- Toggle bluetooth
 		end),
 	awful.key({}, "XF86Launch3", function()
-			local status = 1 + awful.util.pread("cat /proc/easy_slow_down_manager");
-			if status > 2 then 
-				status = 0 
-			end
-			local message = {"Slow", "Medium", "Fast"}
-			awful.util.spawn_with_shell(
-				"echo " .. status .. " > /proc/easy_slow_down_manager")
+			local status = awful.util.pread(fan_cycle);
 			naughty.notify({
-				text = "Cpu cooling status: " .. message[status+1], 
-				title = "Cpu",
+				text = "Fan mode: " .. status, 
+				title = "Fan",
 				icon = "/usr/share/icons/oxygen/32x32/devices/cpu.png"
 				})
-			-- Toggle cpu
-		end),
-	awful.key({}, "XF86Display", function()
-			awful.util.spawn("disper --cycle-stages=' -s : -e ' -C");
+			-- Cycle fan mode
 		end),
 	awful.key({}, "XF86WLAN", function()
-			local status = 1 - awful.util.pread("cat /proc/easy_wifi_kill");
-			local message = {"Off", "On"}
-			awful.util.spawn_with_shell(
-				"echo " .. status .. " > /proc/easy_wifi_kill")
-			if status == 1 then
-				-- Sometimes WiFi gets soft-blocked. Unblock it here
-				awful.util.spawn("/usr/sbin/rfkill unblock wifi")
-			end
+			local status = awful.util.pread(wifi_toggle);
 			naughty.notify({
-				text = "WiFi status: " .. message[status+1], 
+				text = "WiFi status: " .. status, 
 				title = "WiFi",
 				icon = "/usr/share/icons/oxygen/32x32/devices/network-wireless.png"
 				})

@@ -1,0 +1,13 @@
+#!/bin/bash
+STATUS=`/usr/sbin/rfkill list wifi | grep Soft | head -n 1 | awk '{print $3}'`
+if [ $STATUS = "no" ]; then
+	sudo -n /usr/sbin/rfkill block wifi
+else
+	sudo -n /usr/sbin/rfkill unblock wifi
+fi
+STATUS=`/usr/sbin/rfkill list wifi | grep Soft | head -n 1 | awk '{print $3}'`
+if [ $STATUS = "no" ]; then
+	echo -n On
+else
+	echo -n Off
+fi

@@ -1,0 +1,11 @@
+#!/bin/bash
+CONTROL="/sys/devices/platform/samsung/backlight/samsung/bl_power"
+CURRENT_STATUS=`cat $CONTROL`
+NEW_STATUS=`echo 1 - $CURRENT_STATUS | bc`
+echo $NEW_STATUS | sudo -n /usr/bin/tee $CONTROL > /dev/null
+STATUS=`cat $CONTROL`
+if [ $STATUS = "1" ]; then
+	echo -n Off
+else
+	echo -n On
+fi

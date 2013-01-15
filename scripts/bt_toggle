@@ -1,0 +1,13 @@
+#!/bin/bash
+STATUS=`/usr/sbin/rfkill list bluetooth | grep Soft | awk '{print $3}'`
+if [ $STATUS = "no" ]; then
+	sudo -n /usr/sbin/rfkill block bluetooth
+else
+	sudo -n /usr/sbin/rfkill unblock bluetooth
+fi
+STATUS=`/usr/sbin/rfkill list bluetooth | grep Soft | awk '{print $3}'`
+if [ $STATUS = "no" ]; then
+	echo -n On
+else
+	echo -n Off
+fi

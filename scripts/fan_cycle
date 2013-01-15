@@ -1,0 +1,33 @@
+#!/bin/bash
+CONTROL="/sys/devices/platform/samsung/performance_level"
+STATUS=`cat $CONTROL`
+case $STATUS in
+"silent")
+NEWSTATUS="normal"
+;;
+"normal")
+NEWSTATUS="overclock"
+;;
+"overclock")
+NEWSTATUS="silent"
+;;
+*)
+NEWSTATUS="bogus"
+;;
+esac
+echo $NEWSTATUS | sudo -n tee $CONTROL > /dev/null
+STATUS=`cat $CONTROL`
+case $STATUS in
+"silent")
+echo -n Silent
+;;
+"normal")
+echo -n Normal
+;;
+"overclock")
+echo -n Overclock
+;;
+*)
+echo -n Bogus
+;;
+esac
