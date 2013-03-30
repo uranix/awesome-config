@@ -9,7 +9,7 @@ import os
 import getpass
 import time
 
-prefix='$HOME/.awesome/'
+prefix='$HOME/.awesome/scripts/'
 
 class awe_exit:
 

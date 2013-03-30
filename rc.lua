@@ -115,7 +115,7 @@ end
 
 tagall = {
 	{name = "1",        layout = awful.layout.suit.tile, screen = 1 },
-	{name = "2",        layout = awful.layout.suit.tile, screen = 2 },
+	{name = "2",        layout = awful.layout.suit.tile, screen = 1 },
 	{name = "3",        layout = awful.layout.suit.tile, screen = 1 },
 	{name = "4",        layout = awful.layout.suit.tile, screen = 1 },
 	{name = "5: www",   layout = awful.layout.suit.tile,  screen = 2 },
@@ -135,8 +135,9 @@ for i, tset in ipairs(tagall) do
 	awful.tag.setproperty(mytags[i], "layout", tset.layout);
 	awful.tag.setproperty(mytags[i], "mwfact", 0.65);
 end
-for i = 1, screen.count() do
-	mytags[i].selected = true
+mytags[1].selected = true;
+if (screen.count() > 1) then
+	mytags[5].selected = true
 end
 
 -- }}}
@@ -206,9 +207,9 @@ mychargeindicator = battery("BAT1")
 -- Mail indicator
 mymailindicator = mail(function (x) 
 	return 
-		x == "tsybulinhome@gmail.com" or
-		x == "tsybulin@crec.mipt.com" or
-		x == "uranix@parallels.mipt.ru"
+		(x == "tsybulinhome@gmail.com") or
+		(x == "tsybulin@crec.mipt.ru") or
+		(x == "uranix@parallels.mipt.ru")
 end)
 
 -- Cpu indicator
@@ -517,6 +518,8 @@ awful.rules.rules = {
       properties = { floating = true } },
     { rule = { class = "gimp" },
       properties = { floating = true } },
+	{ rule = { class = "Gnuplot" },
+	  properties = { floating = true, ontop = true } },
     -- Window to tag mapping
     { rule_any = { class = {"Firefox", "Iceweasel" } },
       properties = { tag = mytags[5] } },

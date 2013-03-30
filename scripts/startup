@@ -2,7 +2,7 @@
 
 DROPBOX="x"$(pidof dropbox)
 if [ "$DROPBOX" = "x" ]; then
-	dropbox start &
+	ionice -c 3 dropbox start &
 fi
 
 NM="x"$(pidof nm-applet)

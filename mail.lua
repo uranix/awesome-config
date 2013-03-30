@@ -24,7 +24,7 @@ function new(filter)
 	ib.image = offline
 	text.text = " 0 "
 	timer:add_signal("timeout", function()
-		local status = awful.util.pread("nc localhost 3411")
+		local status = awful.util.pread("nc -w 1 localhost 3411")
 		total = 0;
 		if status == "" then
 			ib.image = offline
