@@ -10,7 +10,7 @@ module("kbdlayout")
 function new(labels)
 	local labels = labels or {}
 	local text = widget({type = "textbox"})
-	local timer = timer {timeout = .5}
+	local timer = timer {timeout = 1}
 
 	text.text = "UNK ";
 

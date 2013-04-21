@@ -118,16 +118,13 @@ tagall = {
 	{name = "2",        layout = awful.layout.suit.tile, screen = 1 },
 	{name = "3",        layout = awful.layout.suit.tile, screen = 1 },
 	{name = "4",        layout = awful.layout.suit.tile, screen = 1 },
-	{name = "5: www",   layout = awful.layout.suit.tile,  screen = 2 },
-	{name = "6: mail"  ,layout = awful.layout.suit.tile,  screen = 2 },
-	{name = "7: im",    layout = awful.layout.suit.tile,  screen = 2 },
-	{name = "8: music", layout = awful.layout.suit.tile,  screen = 2 },
-	{name = "9: video", layout = awful.layout.suit.tile,  screen = 2 },
+	{name = "5: www",   layout = awful.layout.suit.tile, screen = 2 },
+	{name = "6: mail",  layout = awful.layout.suit.tile, screen = 2 },
+	{name = "7: im",    layout = awful.layout.suit.tile, screen = 2 },
+	{name = "8: music", layout = awful.layout.suit.tile, screen = 2 },
+	{name = "9: video", layout = awful.layout.suit.tile, screen = 2 },
+	{name = "0",	    layout = awful.layout.suit.tile, screen = 2 },
 }
---for s = 1, screen.count() do
---    -- Each screen has its own tag table.
---    tags[s] = awful.tag({ 1, 2, 3, 4, "5: www", "6: mail", "7: im", "8: music", "9: video"}, s, layouts[1])
---end
 
 for i, tset in ipairs(tagall) do
 	mytags[i] = tag({name = tset.name})
@@ -135,6 +132,7 @@ for i, tset in ipairs(tagall) do
 	awful.tag.setproperty(mytags[i], "layout", tset.layout);
 	awful.tag.setproperty(mytags[i], "mwfact", 0.65);
 end
+
 mytags[1].selected = true;
 if (screen.count() > 1) then
 	mytags[5].selected = true
@@ -454,7 +452,7 @@ clientkeys = awful.util.table.join(
 --   keynumber = math.min(9, math.max(#tags[s], keynumber));
 -- end
 
-keynumber = math.min(9, #mytags)
+keynumber = math.min(10, #mytags)
 
 -- Bind all key numbers to tags.
 -- Be careful: we use keycodes to make it works on any keyboard layout.
