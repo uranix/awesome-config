@@ -1,8 +1,9 @@
 #!/bin/bash
 SAMSUNG="/sys/devices/platform/samsung/backlight/samsung/"
+VALUE=$SAMSUNG"actual_brightness"
 CONTROL=$SAMSUNG"brightness"
 BOUND=$SAMSUNG"max_brightness"
-LEVEL=`cat $CONTROL`
+LEVEL=`cat $VALUE`
 LEVEL_MAX=`cat $BOUND`
 
 if [ $LEVEL -lt $LEVEL_MAX ]; then
