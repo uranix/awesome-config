@@ -91,7 +91,7 @@ function register(mywidget, custom_current_day_format)
 	end
 	tooltip:add_to_object(mywidget)
 
-	mywidget:add_signal("mouse::enter",tooltip.update)
+	mywidget:connect_signal("mouse::enter",tooltip.update)
 
 	mywidget:buttons(awful.util.table.join(
 	awful.button({ }, 1, function()

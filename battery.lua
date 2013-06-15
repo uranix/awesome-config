@@ -1,6 +1,7 @@
 local awful = require("awful")
 local timer = require("timer")
-local widget = widget
+local wibox = require("wibox")
+local widget = require("wibox.widget")
 local string = {format = string.format}
 local naughty = require("naughty")
 local math = {floor = math.floor}
@@ -21,12 +22,12 @@ end
 function new(bat)
 	local bat = bat
 	local pb = awful.widget.progressbar({width = 10, height = 24});
-	local text = widget({type = "textbox"})
+	local text = widget.textbox()
 	local timer = timer {timeout = 2}
 	local RED = {1, 0, 0}
 	local GREEN = {0, 1, 0}
 	local YELLOW = {1, 1, 0}
-	text.text = " -:-- "
+	text:set_text(" -:-- ")
 	function pb:set_charging(v)
 		pb:set_value(v)
 		pb:set_background_color(rgb(YELLOW, GREEN, v, 0.25))
@@ -41,7 +42,7 @@ function new(bat)
 	end
 	pb:set_vertical(true)
 	pb:set_discharging(1)
-	timer:add_signal("timeout", function()
+	timer:connect_signal("timeout", function()
 		local status = awful.util.pread("cat /sys/class/power_supply/" .. bat .. '/uevent')
 		local charging = true;
 		local now = 0
@@ -67,9 +68,9 @@ function new(bat)
 		local hours = math.floor(mins / 60);
 		mins = mins - 60 * hours;
 		if current < 500000 then
-			text.text = " -:-- "
+			text:set_text(" -:-- ")
 		else
-			text.text = string.format(" %d:%02d ", hours, mins)
+			text:set_text(string.format(" %d:%02d ", hours, mins))
 		end
 		local v = now / full
 		if charging then
@@ -79,7 +80,10 @@ function new(bat)
 		end
 	end)
 	timer:start()
-	return {text, pb.widget, layout = awful.widget.layout.horizontal.rightleft}
+	local layout = wibox.layout.fixed.horizontal();
+	layout:add(pb);
+	layout:add(text);
+	return layout
 end
 
 setmetatable(_M, {__call = function(_, ...) return new(...) end})

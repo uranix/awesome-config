@@ -1,7 +1,7 @@
 local awful = require("awful")
 local timer = require("timer")
-local widget = widget
-local image = image
+local wibox = require("wibox")
+local widget = require("wibox.widget")
 local string = {format = string.format}
 local naughty = require("naughty")
 local math = {floor = math.floor}
@@ -12,22 +12,22 @@ local setmetatable = setmetatable
 
 module("mail")
 
-unread = image("/usr/share/icons/gnome/24x24/status/mail-unread.png")
-read = image("/usr/share/icons/gnome/24x24/status/mail-read.png")
-offline = image("/usr/share/icons/gnome/24x24/status/stock_dialog-error.png")
+unread = "/usr/share/icons/gnome/24x24/status/mail-unread.png"
+read = "/usr/share/icons/gnome/24x24/status/mail-read.png"
+offline = "/usr/share/icons/gnome/24x24/status/stock_dialog-error.png"
 
 function new(filter)
-	local ib = widget({type = "imagebox"})
-	local text = widget({type = "textbox"})
+	local ib = widget.imagebox()
+	local text = widget.textbox()
 	local timer = timer {timeout = 5}
 	local total = 0;
-	ib.image = offline
-	text.text = " 0 "
-	timer:add_signal("timeout", function()
+	ib:set_image(offline)
+	text:set_text(" 0 ")
+	timer:connect_signal("timeout", function()
 		local status = awful.util.pread("nc -w 1 localhost 3411")
 		total = 0;
 		if status == "" then
-			ib.image = offline
+			ib:set_image(offline)
 		else
 			status = json.decode(status);
 			for i = 1, #status do
@@ -35,12 +35,15 @@ function new(filter)
 					total = total + status[i].unread
 				end
 			end
-			ib.image = (total ~= 0) and unread or read
+			ib:set_image((total ~= 0) and unread or read)
 		end
-		text.text = string.format(" %d ", total)
+		text:set_text(string.format(" %d ", total))
 	end)
 	timer:start()
-	return {text, ib, layout = awful.widget.layout.horizontal.rightleft}
+	local layout = wibox.layout.fixed.horizontal();
+	layout:add(ib);
+	layout:add(text);
+	return layout
 end
 
 setmetatable(_M, {__call = function(_, ...) return new(...) end})

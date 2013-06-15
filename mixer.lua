@@ -1,6 +1,7 @@
 local awful = require("awful")
 local timer = require("timer")
-local widget = widget
+local wibox = require("wibox")
+local widget = require("wibox.widget")
 local string = {format = string.format}
 local naughty = require("naughty")
 local math = {floor = math.floor}
@@ -62,15 +63,15 @@ function new(items, activecontrol)
 			activecontrol.device = j;
 			activecontrol.control = items[i].control;
 		end
-		pbars[i].widget:buttons(awful.button({ }, 1, handlers[i]))
-		labels[i] = widget({type = "textbox"})
-		labels[i].text = " " .. items[i].name .. " "
+		pbars[i]:buttons(awful.button({ }, 1, handlers[i]))
+		labels[i] = widget.textbox()
+		labels[i]:set_text(" " .. items[i].name .. " ")
 		labels[i]:buttons(awful.button({ }, 1, handlers[i]))
 		ret:insert(labels[i])
-		ret:insert(pbars[i].widget)
+		ret:insert(pbars[i])
 	end
 	local timer = timer {timeout = 0.5}
-	timer:add_signal("timeout", function()
+	timer:connect_signal("timeout", function()
 		local status = awful.util.pread("cat /proc/asound/cards")
 		local cards = status:gmatch("[^\n]+\n[^\n]+")
 		ordinals = {}
@@ -96,9 +97,9 @@ function new(items, activecontrol)
 				end
 				if (j == "" .. activecontrol.device) and (cha == activecontrol.control) then
 					for k = 1,n do
-						labels[k].text = string.format(" %s ", items[k].name)
+						labels[k]:set_text(string.format(" %s ", items[k].name))
 					end
-					labels[i].text = string.format(" <b>%s</b> ", items[i].name)
+					labels[i]:set_markup(string.format(" <b>%s</b> ", items[i].name))
 				end
 			else
 				pbars[i]:disable()
@@ -106,8 +107,11 @@ function new(items, activecontrol)
 		end
 	end)
 	timer:start()
-	ret.layout = awful.widget.layout.horizontal.rightleft
-	return ret
+	local layout = wibox.layout.fixed.horizontal();
+	for i = #ret,1,-1 do
+		layout:add(ret[i]);
+	end
+	return layout
 end
 
 setmetatable(_M, {__call = function(_, ...) return new(...) end})

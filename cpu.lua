@@ -1,6 +1,7 @@
 local awful = require("awful")
 local timer = require("timer")
-local widget = widget
+local wibox = require("wibox")
+local widget = require("wibox.widget")
 local image = image
 local string = {format = string.format}
 local naughty = require("naughty")
@@ -12,14 +13,15 @@ local setmetatable = setmetatable
 
 module("cpu")
 
-veryhot = image("/usr/share/icons/gnome/24x24/status/software-update-urgent.png")
-hot = image("/usr/share/icons/gnome/24x24/status/software-update-available.png")
-norm = image(os.getenv("HOME") .. "/.awesome/cpu-norm.png")
-offline = image("/usr/share/icons/gnome/24x24/status/stock_dialog-error.png")
+veryhot = "/usr/share/icons/gnome/24x24/status/software-update-urgent.png"
+hot = "/usr/share/icons/gnome/24x24/status/software-update-available.png"
+offline = "/usr/share/icons/gnome/24x24/status/stock_dialog-error.png"
+
+norm = os.getenv("HOME") .. "/.awesome/cpu-norm.png"
 
 function new()
-	local ib = widget({type = "imagebox"})
-	local text = widget({type = "textbox"})
+	local ib = widget.imagebox()
+	local text = widget.textbox()
 	local timer = timer {timeout = 2}
 	local curr_user = 0
 	local curr_nice = 0
@@ -33,15 +35,15 @@ function new()
 	local usage = 0
 	local loada
 
-	ib.image = offline
-	text.text = " 0% 0.00 "
-	timer:add_signal("timeout", function()
+	ib:set_image(offline)
+	text:set_text(" 0% 0.00 ")
+	timer:connect_signal("timeout", function()
 		local status = awful.util.pread("cat /proc/stat")
 		local loadavg = awful.util.pread("cat /proc/loadavg")
 		usage = 0
 		loada = 0
 		if status == "" or loadavg == "" then
-			ib.image = offline
+			ib:set_image(offline)
 		else
 			curr_user, curr_nice, curr_sys, curr_idle = 
 				status:match("cpu%s+(%w+) (%w+) (%w+) (%w+) *")
@@ -55,18 +57,21 @@ function new()
 			local ishot = (usage > 12 or loada > 1.5)
 			local isveryhot =  (usage > 50 or loada > 2.5)
 			if isveryhot then
-				ib.image = veryhot
+				ib:set_image(veryhot)
 			else if ishot then
-					ib.image = hot
+					ib:set_image(hot)
 				else 
-					ib.image = norm
+					ib:set_image(norm)
 				end
 			end
 		end
-		text.text = string.format(" %02d%% %.2f ", usage, loada)
+		text:set_text(string.format(" %02d%% %.2f ", usage, loada))
 	end)
 	timer:start()
-	return {text, ib, layout = awful.widget.layout.horizontal.rightleft}
+	local layout = wibox.layout.fixed.horizontal();
+	layout:add(ib);
+	layout:add(text);
+	return layout
 end
 
 setmetatable(_M, {__call = function(_, ...) return new(...) end})
