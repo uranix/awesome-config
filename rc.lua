@@ -64,7 +64,7 @@ beautiful.init(os.getenv("HOME") .. "/.awesome/themes/default/theme.lua")
 -- beautiful.init("/usr/share/awesome/themes/default/theme.lua")
 if beautiful.wallpaper then
 	for s = 1, screen.count() do
-		gears.wallpaper.maximized(beautiful.wallpaper, s, true)
+		gears.wallpaper.centered(beautiful.wallpaper, s)
 	end
 end
 
@@ -265,6 +265,7 @@ for s = 1, screen.count() do
 	left_widgets:add(mypromptbox[s]);
 
 	local right_widgets = wibox.layout.fixed.horizontal()
+    if s == 1 then right_widgets:add(mylayoutindicator) end
     if s == 1 then right_widgets:add(myvolumeindicator) end
     if s == 1 then right_widgets:add(mycpuindicator) end
     if s == 1 then right_widgets:add(mymailindicator) end
@@ -374,7 +375,7 @@ globalkeys = awful.util.table.join(
 -- {{{ Misc bindings
 	awful.key({}, "XF86Display", function()
 			set_active_screen(1);
-			awful.util.spawn("disper --cycle-stages=' -s : -e ' -C");
+			awful.util.spawn(os.getenv("HOME") .. "/.awesome/scripts/randr");
 		end),
 	awful.key({}, "XF86AudioRaiseVolume", function()
 			awful.util.spawn(string.format('amixer -D hw:%d -q set %s 5%%+', 

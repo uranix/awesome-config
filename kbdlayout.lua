@@ -16,7 +16,7 @@ function new(labels)
 	text:set_text("UNK ");
 
 	timer:connect_signal("timeout", function() 
-		local status = awful.util.pread(os.getenv("HOME") .. "/.awesome/altgroup")
+		local status = awful.util.pread(os.getenv("HOME") .. "/.awesome/scripts/altgroup")
 		status = status:match("(%w+)")
 		text:set_text(" " .. (labels[status] or status) .. " ")
 	end)

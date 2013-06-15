@@ -87,7 +87,7 @@ function new(items, activecontrol)
 			local j = ordinals[alias]
 			if j then
 				status = awful.util.pread(string.format(
-					os.getenv("HOME") .. "/.awesome/amixer_wrap %s %s", j, cha))
+					os.getenv("HOME") .. "/.awesome/scripts/amixer_wrap %s %s", j, cha))
 				local name, junk1, junk2, per, db1, db2, mute = 
 					status:match("(.*)%: (%w+) (%d+) %[(%d+)%%%] %[([-%d]+)%.(%d+)dB%] %[(%w+)%]")
 				if per and mute then

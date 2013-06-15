@@ -1,0 +1,12 @@
+#!/bin/bash
+
+if xrandr -q | grep -q 'VGA-0 disconnected'; then 
+	xrandr --output LVDS-0 --auto --output VGA-0 --off --right-of LVDS-0
+	exit 1
+fi
+
+if xrandr -q | grep -q 'current 1600 x 900'; then
+	xrandr --output LVDS-0 --auto --output VGA-0 --auto --right-of LVDS-0
+else
+	xrandr --output LVDS-0 --auto --output VGA-0 --off --right-of LVDS-0
+fi
