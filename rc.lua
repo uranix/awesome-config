@@ -27,6 +27,10 @@ require("mixer")
 require("kbdlayout")
 require("cal")
 
+-- Enable transparency via xcompmgr
+
+awful.util.spawn_with_shell("xcompmgr &")
+
 -- Debug
 
 function debug_notification(message)
@@ -536,6 +540,8 @@ awful.rules.rules = {
       properties = { floating = true } },
 	{ rule = { class = "Gnuplot" },
 	  properties = { floating = true, ontop = true } },
+	{ rule = { type = "splash" }, 
+	  properties = { border_width = 0} },
     -- Window to tag mapping
     { rule_any = { class = {"Firefox", "Iceweasel" } },
       properties = { tag = mytags[5] } },
@@ -554,7 +560,6 @@ client.disconnect_signal("manage", awful.tag.manage)
 -- to hook
 client.disconnect_signal("manage", awful.rules.apply)
 
--- TODO Replace with actual tag.manage version
 client.connect_signal("manage", function (c, startup)
     -- If we are not managing this application at startup,
     -- move it to the screen where the mouse is.
