@@ -5,6 +5,7 @@ local widget = require("wibox.widget")
 local string = {format = string.format}
 local naughty = require("naughty")
 local math = {floor = math.floor}
+local io = {open = io.open}
 
 local setmetatable = setmetatable
 
@@ -43,7 +44,9 @@ function new(bat)
 	pb:set_vertical(true)
 	pb:set_discharging(1)
 	timer:connect_signal("timeout", function()
-		local status = awful.util.pread("cat /sys/class/power_supply/" .. bat .. '/uevent')
+		local psfile = io.open("/sys/class/power_supply/" .. bat .. "/uevent")
+		local status = psfile:read("*a")
+		psfile:close()
 		local charging = true;
 		local now = 0
 		local full = 0

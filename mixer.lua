@@ -7,6 +7,7 @@ local naughty = require("naughty")
 local math = {floor = math.floor}
 local table = {insert = table.insert}
 local os = {getenv = os.getenv}
+local io = {open = io.open}
 
 local setmetatable = setmetatable
 
@@ -70,9 +71,11 @@ function new(items, activecontrol)
 		ret:insert(labels[i])
 		ret:insert(pbars[i])
 	end
-	local timer = timer {timeout = 0.5}
+	local timer = timer {timeout = 2}
 	timer:connect_signal("timeout", function()
-		local status = awful.util.pread("cat /proc/asound/cards")
+		local procfile = io.open("/proc/asound/cards");
+		local status = procfile:read("*a");
+		procfile:close()
 		local cards = status:gmatch("[^\n]+\n[^\n]+")
 		ordinals = {}
 		for card in cards do
@@ -86,8 +89,11 @@ function new(items, activecontrol)
 			local cha = items[i].control
 			local j = ordinals[alias]
 			if j then
-				status = awful.util.pread(string.format(
-					os.getenv("HOME") .. "/.awesome/scripts/amixer_wrap %s %s", j, cha))
+				local amixerout = awful.util.pread(string.format("amixer -D hw:%s sget %s", j, cha));
+				local status
+				for line in amixerout:gmatch("[^\n]+") do
+					status = line
+				end
 				local name, junk1, junk2, per, db1, db2, mute = 
 					status:match("(.*)%: (%w+) (%d+) %[(%d+)%%%] %[([-%d]+)%.(%d+)dB%] %[(%w+)%]")
 				if per and mute then
