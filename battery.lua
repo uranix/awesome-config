@@ -5,7 +5,7 @@ local widget = require("wibox.widget")
 local string = {format = string.format}
 local naughty = require("naughty")
 local math = {floor = math.floor}
-local io = {open = io.open}
+local tiny = require("tiny")
 
 local setmetatable = setmetatable
 
@@ -24,7 +24,7 @@ function new(bat)
 	local bat = bat
 	local pb = awful.widget.progressbar({width = 10, height = 24});
 	local text = widget.textbox()
-	local timer = timer {timeout = 2}
+	local timer = timer {timeout = 5}
 	local RED = {1, 0, 0}
 	local GREEN = {0, 1, 0}
 	local YELLOW = {1, 1, 0}
@@ -44,9 +44,7 @@ function new(bat)
 	pb:set_vertical(true)
 	pb:set_discharging(1)
 	timer:connect_signal("timeout", function()
-		local psfile = io.open("/sys/class/power_supply/" .. bat .. "/uevent")
-		local status = psfile:read("*a")
-		psfile:close()
+		local status = tiny.read_to_string("/sys/class/power_supply/" .. bat .. "/uevent")
 		local charging = true;
 		local now = 0
 		local full = 0

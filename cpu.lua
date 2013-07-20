@@ -8,7 +8,7 @@ local naughty = require("naughty")
 local math = {floor = math.floor}
 local type = type
 local os = {getenv = os.getenv}
-local io = {open = io.open}
+local tiny = require("tiny")
 
 local setmetatable = setmetatable
 
@@ -34,17 +34,13 @@ function new()
 	local diff_idle = 0
 	local diff_total = 0
 	local usage = 0
-	local loada
+	local loada = 0
 
 	ib:set_image(offline)
 	text:set_text(" 0% 0.00 ")
 	timer:connect_signal("timeout", function()
-		local statfile = io.open("/proc/stat")
-		local status = statfile:read("*a")
-		statfile:close()
-		local lafile = io.open("/proc/loadavg")
-		local loadavg = lafile:read("*a")
-		lafile:close()
+		local status = tiny.read_to_string("/proc/stat")
+		local loadavg = tiny.read_to_string("/proc/loadavg")
 		usage = 0
 		loada = 0
 		if status == "" or loadavg == "" then

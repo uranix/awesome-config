@@ -7,7 +7,7 @@ local naughty = require("naughty")
 local math = {floor = math.floor}
 local table = {insert = table.insert}
 local os = {getenv = os.getenv}
-local io = {open = io.open}
+local tiny = require("tiny")
 
 local setmetatable = setmetatable
 
@@ -73,9 +73,7 @@ function new(items, activecontrol)
 	end
 	local timer = timer {timeout = 2}
 	timer:connect_signal("timeout", function()
-		local procfile = io.open("/proc/asound/cards");
-		local status = procfile:read("*a");
-		procfile:close()
+		local status = tiny.read_to_string("/proc/asound/cards");
 		local cards = status:gmatch("[^\n]+\n[^\n]+")
 		ordinals = {}
 		for card in cards do
@@ -90,7 +88,7 @@ function new(items, activecontrol)
 			local j = ordinals[alias]
 			if j then
 				local amixerout = awful.util.pread(string.format("amixer -D hw:%s sget %s", j, cha));
-				local status
+				local status = ""
 				for line in amixerout:gmatch("[^\n]+") do
 					status = line
 				end

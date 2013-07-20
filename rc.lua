@@ -129,8 +129,14 @@ function set_active_screen(i)
 	naughty.config.defaults.screen = activescreen;
 end
 
-function spawn_on_active_screen(cmd)
-	awful.util.spawn(cmd, nil, activescreen);
+oldspawn = awful.util.spawn
+awful.util.spawn = function (cmd, sn, screen)
+	oldspawn(cmd, sn, screen or activescreen)
+end
+
+oldspawnws = awful.util.spawn_with_shell
+awful.util.spawn = function (cmd, screen)
+	oldspawnws(cmd, screen or activescreen)
 end
 
 tagall = {
@@ -163,7 +169,7 @@ end
 
 -- {{{ Wibox
 -- Create a textclock widget
-mytextclock = awful.widget.textclock.new(" %a %d %b, %H:%M:%S ", 1)
+mytextclock = awful.widget.textclock.new(" %a %d %b, %H:%M ", 5)
 -- Show calendar on hover
 cal.register(mytextclock, "<span color=\"#00c000\"><b>%s</b></span>")
 
@@ -345,11 +351,11 @@ globalkeys = awful.util.table.join(
         end),
 
     -- Standard program
-    awful.key({ modkey,           }, "space", function () spawn_on_active_screen(terminal) end),
+    awful.key({ modkey,           }, "space", function () awful.util.spawn(terminal) end),
     awful.key({ modkey, "Shift"   }, "r", awesome.restart),
     awful.key({ modkey,           }, "q", function () awful.util.spawn(awe_lock) end),
-    awful.key({ modkey, "Shift"   }, "e", function () spawn_on_active_screen(awe_exit) end),
-    awful.key({					  }, "XF86PowerOff", function () spawn_on_active_screen(awe_exit) end),
+    awful.key({ modkey, "Shift"   }, "e", function () awful.util.spawn(awe_exit) end),
+    awful.key({					  }, "XF86PowerOff", function () awful.util.spawn(awe_exit) end),
     awful.key({ modkey,           }, "l", function () awful.tag.incmwfact( 0.05)    end),
     awful.key({ modkey,           }, "h", function () awful.tag.incmwfact(-0.05)    end),
     awful.key({ modkey, "Shift"   }, "l", function () awful.tag.incnmaster( 1)      end),
