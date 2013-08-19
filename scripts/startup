@@ -1,5 +1,15 @@
 #!/bin/bash
 
+XCOMP="x"$(pidof xcompmgr)
+if [ "$XCOMP" = "x" ]; then
+	xcompmgr &
+fi
+
+ASUS="x"$(pidof asus-hid-control)
+if [ "$ASUS" = "x" ]; then
+	sudo asus-hid-control &
+fi
+
 DROPBOX="x"$(pidof dropbox)
 if [ "$DROPBOX" = "x" ]; then
 	ionice -c 3 dropbox start &

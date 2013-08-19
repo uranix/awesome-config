@@ -27,10 +27,6 @@ require("mixer")
 require("kbdlayout")
 require("cal")
 
--- Enable transparency via xcompmgr
-
-awful.util.spawn_with_shell("xcompmgr &")
-
 -- Debug
 
 function debug_notification(message)
@@ -300,9 +296,7 @@ end
 root.buttons(awful.util.table.join(
 	awful.button({ }, 1, function()
 		set_active_screen(mouse.screen)
-	end),
-    awful.button({ }, 4, awful.tag.viewnext),
-    awful.button({ }, 5, awful.tag.viewprev)
+	end) 
 ))
 -- }}}
 
@@ -352,10 +346,28 @@ globalkeys = awful.util.table.join(
 
     -- Standard program
     awful.key({ modkey,           }, "space", function () awful.util.spawn(terminal) end),
-    awful.key({ modkey, "Shift"   }, "r", awesome.restart),
+    awful.key({ modkey, "Shift"   }, "r", function ()
+		awful.util.pread("awesome -k 2> /tmp/awesome-config-check")
+		local status = awful.util.pread("/bin/cat /tmp/awesome-config-check")
+		local good = "\226\156\148 Configuration file syntax OK.\n";
+
+		if (status ~= good) then
+			status = status:sub(1, status:len() - 1)
+			naughty.notify({ preset = naughty.config.presets.critical,
+							 title = "Config file has errors!",
+							 timeout = 5,
+							 text = status })
+		else
+			awesome.restart()
+		end
+	end),
     awful.key({ modkey,           }, "q", function () awful.util.spawn(awe_lock) end),
     awful.key({ modkey, "Shift"   }, "e", function () awful.util.spawn(awe_exit) end),
     awful.key({					  }, "XF86PowerOff", function () awful.util.spawn(awe_exit) end),
+	awful.key({ modkey,           }, "c", function () awful.util.spawn_with_shell("xclip -selection primary -o | xclip -selection secondary") end),
+	awful.key({ modkey,           }, "v", function () awful.util.spawn_with_shell("xclip -selection secondary -o | xclip -selection primary") end),
+
+	-- Layout managing
     awful.key({ modkey,           }, "l", function () awful.tag.incmwfact( 0.05)    end),
     awful.key({ modkey,           }, "h", function () awful.tag.incmwfact(-0.05)    end),
     awful.key({ modkey, "Shift"   }, "l", function () awful.tag.incnmaster( 1)      end),
