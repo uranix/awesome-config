@@ -1,0 +1,2 @@
+#!/bin/sh
+xclip -selection secondary -o | xclip -selection primary -i

@@ -62,10 +62,9 @@ end
 -- Themes define colours, icons, and wallpapers
 beautiful.init(os.getenv("HOME") .. "/.awesome/themes/default/theme.lua")
 -- beautiful.init("/usr/share/awesome/themes/default/theme.lua")
+gears.wallpaper.centered(nil, nil)
 if beautiful.wallpaper then
-	for s = 1, screen.count() do
-		gears.wallpaper.centered(beautiful.wallpaper, s)
-	end
+	gears.wallpaper.maximized(beautiful.wallpaper, 1)
 end
 
 -- This is used later as the default terminal and editor to run.
@@ -82,6 +81,8 @@ backlight_toggle = script_pwd .. "backlight_toggle"
 wifi_toggle = script_pwd .. "wifi_toggle"
 bt_toggle = script_pwd .. "bt_toggle"
 fan_cycle = script_pwd .. "fan_cycle"
+xclip_copy = script_pwd .. "xclip_copy"
+xclip_paste = script_pwd .. "xclip_paste"
 
 awful.util.spawn(script_pwd .. "startup")
 
@@ -364,8 +365,8 @@ globalkeys = awful.util.table.join(
     awful.key({ modkey,           }, "q", function () awful.util.spawn(awe_lock) end),
     awful.key({ modkey, "Shift"   }, "e", function () awful.util.spawn(awe_exit) end),
     awful.key({					  }, "XF86PowerOff", function () awful.util.spawn(awe_exit) end),
-	awful.key({ modkey,           }, "c", function () awful.util.spawn_with_shell("xclip -selection primary -o | xclip -selection secondary") end),
-	awful.key({ modkey,           }, "v", function () awful.util.spawn_with_shell("xclip -selection secondary -o | xclip -selection primary") end),
+	awful.key({ modkey,           }, "c", function () awful.util.spawn(xclip_copy) end),
+	awful.key({ modkey,           }, "v", function () awful.util.spawn(xclip_paste) end),
 
 	-- Layout managing
     awful.key({ modkey,           }, "l", function () awful.tag.incmwfact( 0.05)    end),
@@ -561,7 +562,7 @@ awful.rules.rules = {
 	{ rule = { type = "splash" }, 
 	  properties = { border_width = 0} },
     -- Window to tag mapping
-    { rule_any = { class = {"Firefox", "Iceweasel" } },
+    { rule_any = { class = {"Firefox", "Iceweasel", "Chromium" } },
       properties = { tag = mytags[5] } },
     { rule = { class = "Icedove" },
       properties = { tag = mytags[6] } },
