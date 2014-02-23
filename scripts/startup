@@ -1,9 +1,9 @@
 #!/bin/bash
 
-#XCOMP="x"$(pidof xcompmgr)
-#if [ "$XCOMP" = "x" ]; then
-#	xcompmgr &
-#fi
+XCOMP="x"$(pidof xcompmgr)
+if [ "$XCOMP" = "x" ]; then
+	xcompmgr &
+fi
 
 ASUS="x"$(pidof asus-hid-control)
 if [ "$ASUS" = "x" ]; then
