@@ -1,11 +1,2 @@
 #!/bin/bash
-SAMSUNG="/sys/devices/platform/samsung/backlight/samsung/"
-VALUE=$SAMSUNG"actual_brightness"
-CONTROL=$SAMSUNG"brightness"
-BOUND=$SAMSUNG"max_brightness"
-LEVEL=`cat $VALUE`
-LEVEL_MAX=`cat $BOUND`
-
-if [ $LEVEL -gt 0 ]; then
-	echo $LEVEL - 1 | bc | sudo -n /usr/bin/tee $CONTROL > /dev/null
-fi
+xbacklight - 10%

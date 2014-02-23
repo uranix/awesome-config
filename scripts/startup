@@ -1,9 +1,9 @@
 #!/bin/bash
 
-XCOMP="x"$(pidof xcompmgr)
-if [ "$XCOMP" = "x" ]; then
-	xcompmgr &
-fi
+#XCOMP="x"$(pidof xcompmgr)
+#if [ "$XCOMP" = "x" ]; then
+#	xcompmgr &
+#fi
 
 ASUS="x"$(pidof asus-hid-control)
 if [ "$ASUS" = "x" ]; then
@@ -44,3 +44,7 @@ POLKIT="x"$(pidof polkit-gnome-authentication-agent-1)
 if [ "$POLKIT" = "x" ]; then
 	/usr/lib/policykit-1-gnome/polkit-gnome-authentication-agent-1 &
 fi
+
+xset -dpms
+xset s noblank
+xset s 0

@@ -60,8 +60,7 @@ end
 
 -- {{{ Variable definitions
 -- Themes define colours, icons, and wallpapers
-beautiful.init(os.getenv("HOME") .. "/.awesome/themes/default/theme.lua")
--- beautiful.init("/usr/share/awesome/themes/default/theme.lua")
+beautiful.init(os.getenv("HOME") .. "/.awesome/themes/custom/theme.lua")
 gears.wallpaper.centered(nil, nil)
 if beautiful.wallpaper then
 	gears.wallpaper.maximized(beautiful.wallpaper, 1)
@@ -241,8 +240,8 @@ mycpuindicator = cpu()
 activevolumecontrol = {device = 0, control = "Headphone"}
 
 myvolumeindicator = mixer({
-	{alias = "Intel", control = "Headphone", name = "Head"},
-	{alias = "Intel", control = "Speaker", name = "Speak"},
+	{alias = "MID", control = "Headphone", name = "Head"},
+	{alias = "MID", control = "Speaker", name = "Speak"},
 	{alias = "Device", control = "PCM", name = "Usb"}
 }, activevolumecontrol)
 
@@ -562,7 +561,7 @@ awful.rules.rules = {
 	{ rule = { type = "splash" }, 
 	  properties = { border_width = 0} },
     -- Window to tag mapping
-    { rule_any = { class = {"Firefox", "Iceweasel", "Chromium" } },
+    { rule_any = { class = {"Firefox", "Iceweasel", "Chromium", "Google-chrome" } },
       properties = { tag = mytags[5] } },
     { rule = { class = "Icedove" },
       properties = { tag = mytags[6] } },
@@ -570,6 +569,8 @@ awful.rules.rules = {
       properties = { tag = mytags[7] } },
     { rule = { icon_name = ".* - CMus" },
       properties = { tag = mytags[8] } },
+    { rule = { class = "sun-awt-X11-XFramePeer" },
+      properties = { floating = true } },
 }
 -- }}}
 

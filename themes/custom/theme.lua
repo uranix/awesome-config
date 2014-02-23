@@ -23,7 +23,7 @@ theme.border_focus  = "#535d6c"
 theme.border_marked = "#91231c"
 
 -- There are other variable sets
--- overriding the default one when
+-- overriding the custom one when
 -- defined, the sets are:
 -- [taglist|tasklist]_[bg|fg]_[focus|urgent]
 -- titlebar_[bg|fg]_[normal|focus]
@@ -33,8 +33,8 @@ theme.border_marked = "#91231c"
 --theme.taglist_bg_focus = "#ff0000"
 
 -- Display the taglist squares
-theme.taglist_squares_sel   = os.getenv("HOME") .. "/.awesome/themes/default/taglist/squarefw.png"
-theme.taglist_squares_unsel = os.getenv("HOME") .. "/.awesome/themes/default/taglist/squarew.png"
+theme.taglist_squares_sel   = os.getenv("HOME") .. "/.awesome/themes/custom/taglist/squarefw.png"
+theme.taglist_squares_unsel = os.getenv("HOME") .. "/.awesome/themes/custom/taglist/squarew.png"
 
 -- Variables set for theming the menu:
 -- menu_[bg|fg]_[normal|focus]
