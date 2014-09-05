@@ -1,49 +1,14 @@
 #!/bin/bash
 
-XCOMP="x"$(pidof xcompmgr)
-if [ "$XCOMP" = "x" ]; then
-	xcompmgr &
-fi
-
-ASUS="x"$(pidof asus-hid-control)
-if [ "$ASUS" = "x" ]; then
-	sudo asus-hid-control &
-fi
-
-DROPBOX="x"$(pidof dropbox)
-if [ "$DROPBOX" = "x" ]; then
-	ionice -c 3 dropbox start &
-fi
-
-NM="x"$(pidof nm-applet)
-if [ "$NM" = "x" ]; then
-	nm-applet &
-fi
-
-ICEDOVE="x"$(pidof icedove-bin)
-if [ "$ICEDOVE" = "x" ]; then
-	ionice -c 2 icedove &
-fi
-
-#ICEWEASEL="x"$(pidof firefox-bin)
-#if [ "$ICEWEASEL" = "x" ]; then
-#	iceweasel &
-#fi
-
-#QUTIM="x"$(pidof qutim)
-#if [ "$QUTIM" = "x" ]; then
-#	qutim &
-#fi
-
-CMUS="x"$(pidof cmus)
-if [ "$CMUS" = "x" ]; then
-	screen -d -m cmus
-fi
-
-POLKIT="x"$(pidof polkit-gnome-authentication-agent-1)
-if [ "$POLKIT" = "x" ]; then
-	/usr/lib/policykit-1-gnome/polkit-gnome-authentication-agent-1 &
-fi
+XCOMP="x"$(pidof xcompmgr); if [ "$XCOMP" = "x" ]; then xcompmgr & fi
+# ASUS="x"$(pidof asus-hid-control); if [ "$ASUS" = "x" ]; then sudo asus-hid-control & fi
+DROPBOX="x"$(pidof dropbox); if [ "$DROPBOX" = "x" ]; then ionice -c 3 dropbox start & fi
+NM="x"$(pidof nm-applet); if [ "$NM" = "x" ]; then nm-applet & fi
+ICEDOVE="x"$(pidof icedove-bin); if [ "$ICEDOVE" = "x" ]; then ionice -c 2 icedove & fi
+# PSI="x"$(pidof ps); if [ "$PSI" = "x" ]; then psi & fi
+# SKYPE="x"$(pidof skype); if [ "$SKYPE" = "x" ]; then skype & fi
+CMUS="x"$(pidof cmus); if [ "$CMUS" = "x" ]; then screen -d -m cmus; fi
+POLKIT="x"$(pidof polkit-gnome-authentication-agent-1); if [ "$POLKIT" = "x" ]; then /usr/lib/policykit-1-gnome/polkit-gnome-authentication-agent-1 & fi
 
 xset -dpms
 xset s noblank
