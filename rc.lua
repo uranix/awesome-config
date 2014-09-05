@@ -63,7 +63,9 @@ end
 beautiful.init(os.getenv("HOME") .. "/.awesome/themes/custom/theme.lua")
 gears.wallpaper.centered(nil, nil)
 if beautiful.wallpaper then
-	gears.wallpaper.maximized(beautiful.wallpaper, 1)
+	for s = 1,screen.count() do
+		gears.wallpaper.centered(beautiful.wallpaper, s)
+	end
 end
 
 -- This is used later as the default terminal and editor to run.
@@ -554,6 +556,8 @@ awful.rules.rules = {
       properties = { floating = true, ontop = true, sticky = true } },
     { rule = { class = "pinentry" },
       properties = { floating = true } },
+    { rule = { class = "Wicd-client.py" },
+      properties = { floating = true } },
     { rule = { class = "gimp" },
       properties = { floating = true } },
 	{ rule = { class = "Gnuplot" },
@@ -565,7 +569,7 @@ awful.rules.rules = {
       properties = { tag = mytags[5] } },
     { rule = { class = "Icedove" },
       properties = { tag = mytags[6] } },
-    { rule_any = { class = {"Qutim", "Xchat", "Skype"} },
+    { rule_any = { class = {"Qutim", "Xchat", "Skype", "psi"} },
       properties = { tag = mytags[7] } },
     { rule = { icon_name = ".* - CMus" },
       properties = { tag = mytags[8] } },
@@ -670,8 +674,10 @@ client.connect_signal("focus", function(c)
 	if activescreen ~= c.screen then
 		set_active_screen(c.screen);
 	end
-	c.border_color = beautiful.border_focus 
+	c.border_color = beautiful.border_focus
 end)
 
-client.connect_signal("unfocus", function(c) c.border_color = beautiful.border_normal end)
+client.connect_signal("unfocus", function(c) 
+	c.border_color = beautiful.border_normal
+end)
 -- }}}
