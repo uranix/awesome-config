@@ -14,6 +14,7 @@ prefix='$HOME/.awesome/scripts/'
 class awe_exit:
 
     def awe_quit(self):
+        os.system(prefix + "shutdown");
         os.system("echo 'awesome.quit()' | awesome-client")
 
     def awe_lock(self):
@@ -44,34 +45,24 @@ class awe_exit:
     def suspend_action(self,btn):
         self.disable_buttons()
         self.awe_lock()
-        os.system("dbus-send --system --print-reply \
-                --dest=\"org.freedesktop.UPower\"   \
-                /org/freedesktop/UPower             \
-                org.freedesktop.UPower.Suspend")
+        os.system("systemctl suspend")
         gtk.main_quit()
 
     def hibernate_action(self,btn):
         self.disable_buttons()
         self.awe_lock()
-        os.system("dbus-send --system --print-reply \
-                --dest=\"org.freedesktop.UPower\"   \
-                /org/freedesktop/UPower             \
-                org.freedesktop.UPower.Hibernate")
+        os.system("system hibernate")
         gtk.main_quit()
 
     def reboot_action(self,btn):
         self.disable_buttons()
-        os.system("dbus-send --system --print-reply   \
-                --dest=\"org.freedesktop.ConsoleKit\" \
-                /org/freedesktop/ConsoleKit/Manager   \
-                org.freedesktop.ConsoleKit.Manager.Restart")
+        os.system(prefix + "shutdown");
+        os.system("systemctl reboot")
 
     def shutdown_action(self,btn):
         self.disable_buttons()
-        os.system("dbus-send --system --print-reply   \
-                --dest=\"org.freedesktop.ConsoleKit\" \
-                /org/freedesktop/ConsoleKit/Manager   \
-                org.freedesktop.ConsoleKit.Manager.Stop")
+        os.system(prefix + "shutdown");
+        os.system("systemctl poweroff")
 
     def create_window(self):
         self.window = gtk.Window()
