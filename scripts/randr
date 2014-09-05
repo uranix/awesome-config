@@ -8,5 +8,10 @@ fi
 if xrandr -q | grep -q 'current 1600 x 900'; then
 	xrandr --output LVDS-0 --auto --output VGA-0 --auto --right-of LVDS-0
 else
-	xrandr --output LVDS-0 --auto --output VGA-0 --off --right-of LVDS-0
+	OPTCNT=$(xrandr -q | grep '*+' | wc -l)
+	if [ "x"${OPTCNT} == "x2" ]; then
+		xrandr --output LVDS-0 --auto --output VGA-0 --off --right-of LVDS-0
+	else
+		xrandr --output LVDS-0 --auto --output VGA-0 --auto --right-of LVDS-0
+	fi
 fi
